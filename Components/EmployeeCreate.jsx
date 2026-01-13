@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import API_URL from "../api";
+import React, { Component } from "react";
 import {
   Container,
   Typography,
@@ -11,21 +12,21 @@ import {
   Snackbar,
   Alert,
   Grid,
-} from '@mui/material';
+} from "@mui/material";
 
 class EmployeeCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: '',
-      severity: 'success', 
+      message: "",
+      severity: "success",
     };
   }
 
   handleSubmit = async (e) => {
     e.preventDefault();
 
-    const form = document.forms['employeeForm'];
+    const form = document.forms["employeeForm"];
     const firstName = form.firstName.value;
     const lastName = form.lastName.value;
     const age = parseInt(form.age.value, 10);
@@ -33,7 +34,7 @@ class EmployeeCreate extends Component {
     const title = form.title.value;
     const department = form.department.value;
     const type = form.type.value;
-    const status = parseInt(form.status.value, 10); 
+    const status = parseInt(form.status.value, 10);
 
     const mutation = `
       mutation {
@@ -61,10 +62,10 @@ class EmployeeCreate extends Component {
     `;
 
     try {
-      const response = await fetch('http://localhost:8000/graphql', {
-        method: 'POST',
+      const response = await fetch(API_URL, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query: mutation }),
       });
@@ -72,20 +73,26 @@ class EmployeeCreate extends Component {
       console.log(result);
 
       if (result.data) {
-        this.setState({ message: 'Employee Created!', severity: 'success' });
+        this.setState({ message: "Employee Created!", severity: "success" });
         form.reset(); // Clear form fields
         window.scrollTo(0, 0); // Scroll to top
       } else {
-        this.setState({ message: 'Oops! Error Creating Employee!', severity: 'error' });
+        this.setState({
+          message: "Oops! Error Creating Employee!",
+          severity: "error",
+        });
       }
     } catch (error) {
       console.error(error);
-      this.setState({ message: 'Oops! Error Creating Employee!', severity: 'error' });
+      this.setState({
+        message: "Oops! Error Creating Employee!",
+        severity: "error",
+      });
     }
-  }
+  };
 
   handleCloseSnackbar = () => {
-    this.setState({ message: '' });
+    this.setState({ message: "" });
   };
 
   render() {
@@ -108,12 +115,7 @@ class EmployeeCreate extends Component {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Last Name"
-                name="lastName"
-                required
-              />
+              <TextField fullWidth label="Last Name" name="lastName" required />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -182,7 +184,7 @@ class EmployeeCreate extends Component {
             type="submit"
             variant="contained"
             color="primary"
-            style={{ marginTop: '20px' }}
+            style={{ marginTop: "20px" }}
           >
             Create Employee
           </Button>

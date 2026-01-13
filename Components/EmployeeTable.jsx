@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import API_URL from "../api";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -15,15 +16,14 @@ import {
   FormControl,
   InputLabel,
   Container,
-} from '@mui/material';
-
+} from "@mui/material";
 
 class EmployeeTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       employees: [],
-      employeesByType: []
+      employeesByType: [],
     };
     this.employeesByType = this.employeesByType.bind(this);
   }
@@ -38,7 +38,7 @@ class EmployeeTable extends Component {
     if (type === "showAll") {
       this.setState({ employeesByType: employees });
     } else {
-      const filteredEmployees = employees.filter(e => e.type === type);
+      const filteredEmployees = employees.filter((e) => e.type === type);
       this.setState({ employeesByType: filteredEmployees });
     }
   }
@@ -61,17 +61,20 @@ class EmployeeTable extends Component {
     `;
 
     try {
-      const response = await fetch('http://localhost:8000/graphql', {
-        method: 'POST',
+      const response = await fetch(API_URL, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query }),
       });
       const result = await response.json();
-      this.setState({ employees: result.data.allEmployees, employeesByType: result.data.allEmployees });
+      this.setState({
+        employees: result.data.allEmployees,
+        employeesByType: result.data.allEmployees,
+      });
     } catch (error) {
-      console.error('Error fetching employees:', error);
+      console.error("Error fetching employees:", error);
     }
   };
 
@@ -94,35 +97,43 @@ class EmployeeTable extends Component {
         }
       }
     `;
-  
+
     try {
-      const response = await fetch('http://localhost:8000/graphql', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query: mutation }),
       });
-  
+
       if (!response.ok) {
         const text = await response.text();
-        console.error("Response not okay, status:", response.status, "text:", text);
+        console.error(
+          "Response not okay, status:",
+          response.status,
+          "text:",
+          text
+        );
         throw new Error("Failed to delete employee");
       }
-  
+
       const result = await response.json();
       const data = result.data?.deleteEmployee;
-  
+
       if (data?.error) {
         alert(data.error);
       } else if (data?.employees) {
-        this.setState({ employees: data.employees, employeesByType: data.employees });
+        this.setState({
+          employees: data.employees,
+          employeesByType: data.employees,
+        });
       } else {
         throw new Error("Unexpected response structure");
       }
     } catch (error) {
-      console.error('Error deleting employee:', error);
-      alert('Failed to delete employee');
+      console.error("Error deleting employee:", error);
+      alert("Failed to delete employee");
     }
   };
 
@@ -136,7 +147,7 @@ class EmployeeTable extends Component {
         <FormControl fullWidth variant="outlined" margin="normal">
           <InputLabel>Type</InputLabel>
           <Select
-            defaultValue='showAll'
+            defaultValue="showAll"
             onChange={(e) => this.employeesByType(e, e.target.value)}
             label="Type"
           >
@@ -191,7 +202,7 @@ class EmployeeTable extends Component {
                         variant="contained"
                         color="secondary"
                         size="small"
-                        style={{ marginLeft: '10px' }}
+                        style={{ marginLeft: "10px" }}
                       >
                         Delete
                       </Button>

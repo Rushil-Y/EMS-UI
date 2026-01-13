@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import API_URL from "../api";
+import React, { Component } from "react";
 
 class UpcomingRetirements extends Component {
   constructor(props) {
@@ -6,7 +7,7 @@ class UpcomingRetirements extends Component {
     this.state = {
       employees: [],
       filteredEmployees: [],
-      filterType: 'showAll',
+      filterType: "showAll",
     };
   }
 
@@ -32,24 +33,29 @@ class UpcomingRetirements extends Component {
     `;
 
     try {
-      const response = await fetch('http://localhost:8000/graphql', {
-        method: 'POST',
+      const response = await fetch(API_URL, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query }),
       });
       const result = await response.json();
 
       if (result.data && result.data.allEmployees) {
-        const upcomingRetirements = result.data.allEmployees.filter(employee => {
-          const age = parseInt(employee.age, 10);
-          return age >= 65;
+        const upcomingRetirements = result.data.allEmployees.filter(
+          (employee) => {
+            const age = parseInt(employee.age, 10);
+            return age >= 65;
+          }
+        );
+        this.setState({
+          employees: upcomingRetirements,
+          filteredEmployees: upcomingRetirements,
         });
-        this.setState({ employees: upcomingRetirements, filteredEmployees: upcomingRetirements });
       }
     } catch (error) {
-      console.error('Error fetching employees:', error);
+      console.error("Error fetching employees:", error);
     }
   };
 
@@ -57,10 +63,12 @@ class UpcomingRetirements extends Component {
     const { employees } = this.state;
     const filterType = e.target.value;
 
-    if (filterType === 'showAll') {
+    if (filterType === "showAll") {
       this.setState({ filteredEmployees: employees });
     } else {
-      const filtered = employees.filter(employee => employee.type === filterType);
+      const filtered = employees.filter(
+        (employee) => employee.type === filterType
+      );
       this.setState({ filteredEmployees: filtered });
     }
 
@@ -75,7 +83,11 @@ class UpcomingRetirements extends Component {
         <h1>Upcoming Retirements</h1>
         <div className="form-group">
           <label>Filter by Type:</label>
-          <select value={filterType} onChange={this.handleFilterChange} name="type">
+          <select
+            value={filterType}
+            onChange={this.handleFilterChange}
+            name="type"
+          >
             <option value="showAll">Show All</option>
             <option value="fulltime">Full-time</option>
             <option value="parttime">Part-time</option>
@@ -99,7 +111,7 @@ class UpcomingRetirements extends Component {
               </tr>
             </thead>
             <tbody>
-              {filteredEmployees.map(employee => (
+              {filteredEmployees.map((employee) => (
                 <tr key={employee.id}>
                   <td>{employee.id}</td>
                   <td>{employee.firstName}</td>

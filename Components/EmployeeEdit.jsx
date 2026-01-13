@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import API_URL from "../api";
+import React, { Component } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -12,15 +13,15 @@ import {
   Grid,
   Snackbar,
   Alert,
-} from '@mui/material';
+} from "@mui/material";
 
 const GetId = (Component) => {
   return (props) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    return <Component {...props} params={id} navigate={navigate} />
-  }
-}
+    return <Component {...props} params={id} navigate={navigate} />;
+  };
+};
 
 class EmployeeEdit extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class EmployeeEdit extends Component {
     this.state = {
       employee: null,
       error: null,
-      successMessage: '',
+      successMessage: "",
     };
   }
 
@@ -60,10 +61,10 @@ class EmployeeEdit extends Component {
 
     try {
       console.log(`Fetching details for employee with id: ${id}`);
-      const response = await fetch('http://localhost:8000/graphql', {
-        method: 'POST',
+      const response = await fetch(API_URL, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query }),
       });
@@ -74,12 +75,15 @@ class EmployeeEdit extends Component {
         this.setState({ employee: result.data.employeeDetails });
         console.log("Employee details set in state:", this.state.employee);
       } else {
-        this.setState({ error: 'Employee not found' });
-        console.error('Error fetching employee details:', result.errors || 'Employee not found');
+        this.setState({ error: "Employee not found" });
+        console.error(
+          "Error fetching employee details:",
+          result.errors || "Employee not found"
+        );
       }
     } catch (error) {
-      console.error('Error fetching employee details:', error);
-      this.setState({ error: 'Failed to fetch employee details' });
+      console.error("Error fetching employee details:", error);
+      this.setState({ error: "Failed to fetch employee details" });
     }
   };
 
@@ -87,7 +91,7 @@ class EmployeeEdit extends Component {
     e.preventDefault();
 
     const id = this.props.params;
-    const form = document.forms['employeeForm'];
+    const form = document.forms["employeeForm"];
     const firstName = form.firstName.value;
     const lastName = form.lastName.value;
     const age = parseInt(form.age.value, 10);
@@ -125,10 +129,10 @@ class EmployeeEdit extends Component {
 
     try {
       console.log(`Submitting update for employee with id: ${id}`);
-      const response = await fetch('http://localhost:8000/graphql', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ query: mutation }),
       });
@@ -148,16 +152,16 @@ class EmployeeEdit extends Component {
         window.scrollTo(0, 0);
 
         // Show success message
-        this.setState({ successMessage: 'Employee updated successfully!' });
+        this.setState({ successMessage: "Employee updated successfully!" });
       }
     } catch (error) {
-      console.error('Error updating employee:', error);
-      alert('Failed to update employee');
+      console.error("Error updating employee:", error);
+      alert("Failed to update employee");
     }
   };
 
   handleCloseSnackbar = () => {
-    this.setState({ successMessage: '' });
+    this.setState({ successMessage: "" });
   };
 
   render() {
@@ -220,7 +224,11 @@ class EmployeeEdit extends Component {
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <InputLabel>Title</InputLabel>
-                <Select name="title" defaultValue={employee.title} label="Title">
+                <Select
+                  name="title"
+                  defaultValue={employee.title}
+                  label="Title"
+                >
                   <MenuItem value="employee">Employee</MenuItem>
                   <MenuItem value="manager">Manager</MenuItem>
                   <MenuItem value="vice president">Vice President</MenuItem>
@@ -231,7 +239,11 @@ class EmployeeEdit extends Component {
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <InputLabel>Department</InputLabel>
-                <Select name="department" defaultValue={employee.department} label="Department">
+                <Select
+                  name="department"
+                  defaultValue={employee.department}
+                  label="Department"
+                >
                   <MenuItem value="IT">IT</MenuItem>
                   <MenuItem value="Marketing">Marketing</MenuItem>
                   <MenuItem value="HR">HR</MenuItem>
@@ -253,7 +265,11 @@ class EmployeeEdit extends Component {
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <InputLabel>Status</InputLabel>
-                <Select name="status" defaultValue={employee.status} label="Status">
+                <Select
+                  name="status"
+                  defaultValue={employee.status}
+                  label="Status"
+                >
                   <MenuItem value={1}>Working</MenuItem>
                   <MenuItem value={0}>Not Working</MenuItem>
                 </Select>
@@ -261,21 +277,22 @@ class EmployeeEdit extends Component {
             </Grid>
           </Grid>
 
-          <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
+          <Typography variant="h6" gutterBottom style={{ marginTop: "20px" }}>
             Retirement Information
           </Typography>
           <Typography variant="body1">
             <strong>Retirement Date:</strong> {employee.retirementDate}
           </Typography>
           <Typography variant="body1">
-            <strong>Time Left Until Retirement:</strong> {employee.yearsLeft} years, {employee.monthsLeft} months, and {employee.daysLeft} days
+            <strong>Time Left Until Retirement:</strong> {employee.yearsLeft}{" "}
+            years, {employee.monthsLeft} months, and {employee.daysLeft} days
           </Typography>
 
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            style={{ marginTop: '20px' }}
+            style={{ marginTop: "20px" }}
           >
             Update Employee
           </Button>
