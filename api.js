@@ -1,5 +1,6 @@
-const API_URL = window.location.hostname.includes("vercel.app")
-  ? "https://rushils-ems-server.vercel.app/graphql"
-  : "http://localhost:5000/graphql";
+const API_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000/graphql"
+    : "https://rushils-ems-server.vercel.app/graphql";
 
 export default API_URL;

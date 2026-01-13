@@ -99,7 +99,7 @@ class EmployeeTable extends Component {
     `;
 
     try {
-      const response = await fetch("http://localhost:5000/graphql", {
+      const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
